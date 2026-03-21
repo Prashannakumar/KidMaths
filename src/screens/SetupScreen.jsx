@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Select } from '../components/ui/Select';
 import { Input } from '../components/ui/Input';
+import { generateWorksheetPDF } from '../utils/pdfUtils';
 
 export const SetupScreen = () => {
   const navigate = useNavigate();
@@ -10,19 +11,25 @@ export const SetupScreen = () => {
   const [difficulty, setDifficulty] = useState('easy');
   const [numberMode, setNumberMode] = useState('single');
   const [customRange, setCustomRange] = useState({ min: '1', max: '20' });
+  
+  // Printing Modal State
+  const [showPrintModal, setShowPrintModal] = useState(false);
+  const [printCount, setPrintCount] = useState('10');
+
+  const getConfig = () => ({
+    operation,
+    difficulty,
+    numberMode,
+    customRange
+  });
 
   const handleStart = () => {
-    // Pass config via state
-    navigate('/practice', {
-      state: {
-        config: {
-          operation,
-          difficulty,
-          numberMode,
-          customRange
-        }
-      }
-    });
+    navigate('/practice', { state: { config: getConfig() } });
+  };
+
+  const handlePrint = () => {
+    generateWorksheetPDF(getConfig(), parseInt(printCount, 10));
+    setShowPrintModal(false);
   };
 
   return (
@@ -79,9 +86,40 @@ export const SetupScreen = () => {
 
       </div>
 
-      <Button onClick={handleStart} className="w-full sm:w-auto px-12 py-4 text-xl">
-        Start Practicing
-      </Button>
+      <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
+        <Button onClick={handleStart} className="px-12 py-4 text-xl">
+          Start Practicing
+        </Button>
+        <Button 
+          onClick={() => setShowPrintModal(true)} 
+          variant="outline" 
+          className="px-8 py-4 text-xl flex items-center justify-center gap-2"
+        >
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+          Print Worksheet
+        </Button>
+      </div>
+
+      {showPrintModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm fade-in">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-sm p-6 shadow-2xl flex flex-col gap-6">
+            <h3 className="text-xl font-bold text-slate-800 dark:text-white">Download PDF</h3>
+            <p className="text-slate-600 dark:text-slate-400">How many questions would you like to print?</p>
+            <Input 
+              type="number" 
+              value={printCount} 
+              onChange={(e) => setPrintCount(e.target.value)} 
+              min="1" 
+              max="50"
+            />
+            <div className="flex gap-4">
+              <Button variant="ghost" className="flex-1" onClick={() => setShowPrintModal(false)}>Cancel</Button>
+              <Button onClick={handlePrint} className="flex-1">Download</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

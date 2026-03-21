@@ -85,6 +85,13 @@ export const SettingsPanel = ({ onClose }) => {
               checked={settings.multipleChoiceMode}
               onChange={(val) => updateSetting('multipleChoiceMode', val)}
             />
+            
+            <Toggle 
+              label="🎮 Gaming Mode" 
+              description="Fun animations, floating animals, and extra sound effects!"
+              checked={settings.gamingMode}
+              onChange={(val) => updateSetting('gamingMode', val)}
+            />
           </div>
         </div>
 

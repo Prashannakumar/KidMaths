@@ -19,6 +19,7 @@ export const SettingsProvider = ({ children }) => {
       sound: true,
       visualFeedback: true,
       multipleChoiceMode: false,
+      gamingMode: false,
       fontSize: 'medium', // small, medium, large
       darkMode: false,
       font: 'Nunito', // Nunito, Quicksand, 'Comic Neue'

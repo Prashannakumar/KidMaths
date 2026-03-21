@@ -35,3 +35,42 @@
   transition: none !important;
   animation: none !important;
 }
+
+/* --- Gaming Mode Animations --- */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float-fast { animation: float 3s ease-in-out infinite; }
+
+@keyframes flyRight {
+  0% { transform: translateX(-10vw); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(110vw); opacity: 0; }
+}
+.animate-fly-right { animation: flyRight 15s linear infinite; }
+
+@keyframes flyLeft {
+  0% { transform: translateX(110vw) scaleX(-1); opacity: 0; }
+  10% { transform: translateX(100vw) scaleX(-1); opacity: 1; }
+  90% { transform: translateX(0vw) scaleX(-1); opacity: 1; }
+  100% { transform: translateX(-10vw) scaleX(-1); opacity: 0; }
+}
+.animate-fly-left { animation: flyLeft 18s linear infinite; }
+
+@keyframes popInOut {
+  0% { transform: scale(0); opacity: 0; }
+  20% { transform: scale(1.2); opacity: 1; }
+  80% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+.animate-pop-in-out { animation: popInOut 2s ease-in-out forwards; }
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+}
+.animate-wiggle { animation: wiggle 1s ease-in-out infinite; }

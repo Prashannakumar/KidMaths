@@ -4,6 +4,7 @@ import { generateQuestion } from '../utils/mathUtils';
 import { useSettings } from '../store/SettingsContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { GamingOverlay } from '../components/GamingOverlay';
 
 export const PracticeScreen = () => {
   const { state } = useLocation();
@@ -38,11 +39,18 @@ export const PracticeScreen = () => {
   const playFeedbackSound = (isCorrect) => {
     if (!settings.sound) return;
     try {
-      const url = isCorrect 
-        ? 'https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3' // Success
-        : 'https://assets.mixkit.co/active_storage/sfx/2042/2042-preview.mp3'; // Soft error
+      let url = '';
+      if (settings.gamingMode) {
+        url = isCorrect 
+          ? 'https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3' // Game win / level up
+          : 'https://assets.mixkit.co/active_storage/sfx/2043/2043-preview.mp3'; // Game boing / fail
+      } else {
+        url = isCorrect 
+          ? 'https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3' // Soft Success
+          : 'https://assets.mixkit.co/active_storage/sfx/2042/2042-preview.mp3'; // Soft error
+      }
       const audio = new Audio(url);
-      audio.volume = 0.3;
+      audio.volume = settings.gamingMode ? 0.6 : 0.3; // slightly louder in gaming mode
       audio.play().catch(() => {});
     } catch(e) {}
   };
@@ -78,9 +86,10 @@ export const PracticeScreen = () => {
   if (!question) return <div className="flex-1 flex items-center justify-center">Loading...</div>;
 
   return (
-    <div className="flex flex-col items-center justify-center flex-1 w-full max-w-2xl mx-auto p-4 md:p-8">
+    <div className="flex flex-col items-center justify-center flex-1 w-full max-w-2xl mx-auto p-4 md:p-8 relative">
+      <GamingOverlay feedback={feedback} isGamingMode={settings.gamingMode} />
       
-      <div className="w-full flex justify-between items-center mb-8 fade-in">
+      <div className="w-full flex justify-between items-center mb-8 fade-in relative z-10">
         <Button variant="ghost" onClick={() => navigate('/')} className="px-4 py-2 text-sm">
           ← Back
         </Button>
@@ -89,7 +98,7 @@ export const PracticeScreen = () => {
         </div>
       </div>
 
-      <div className={`w-full bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 sm:p-12 shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center gap-10 transition-all duration-500 ${settings.visualFeedback && feedback === 'correct' ? 'ring-4 ring-emerald-200 bg-emerald-50 dark:bg-emerald-900/20' : ''} ${settings.visualFeedback && feedback === 'incorrect' ? 'ring-4 ring-red-200 bg-red-50 dark:bg-red-900/20' : ''}`}>
+      <div className={`w-full bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 sm:p-12 shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center gap-10 transition-all duration-500 relative z-10 ${settings.visualFeedback && feedback === 'correct' ? 'ring-4 ring-emerald-200 bg-emerald-50 dark:bg-emerald-900/20' : ''} ${settings.visualFeedback && feedback === 'incorrect' ? 'ring-4 ring-red-200 bg-red-50 dark:bg-red-900/20' : ''}`}>
         
         {/* Question Display */}
         <div className="text-6xl sm:text-7xl lg:text-8xl font-black text-slate-800 dark:text-white tracking-tighter" style={{ fontVariantNumeric: 'tabular-nums' }}>
