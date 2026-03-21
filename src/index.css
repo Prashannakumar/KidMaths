@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --font-nunito: "Nunito", sans-serif;
+  --font-quicksand: "Quicksand", sans-serif;
+  --font-comic: "Comic Neue", cursive;
+
+  --color-pastel-blue: #e0f2fe;
+  --color-pastel-green: #dcfce7;
+  --color-pastel-red: #fee2e2;
+  --color-pastel-yellow: #fef9c3;
+  --color-pastel-purple: #f3e8ff;
+  
+  --color-dark-bg: #1e293b;
+  --color-dark-surface: #334155;
+  --color-dark-border: #475569;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 transition-colors duration-300;
+  }
+  
+  body.dark-mode {
+    @apply bg-dark-bg text-slate-200;
+  }
+}
+
+/* Base Transition Utilities */
+.soft-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.no-animation * {
+  transition: none !important;
+  animation: none !important;
+}
