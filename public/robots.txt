@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Prevent indexing of specific unhelpful paths if any exist in the future, e.g.
+# Disallow: /api/
