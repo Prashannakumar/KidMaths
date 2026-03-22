@@ -41,22 +41,25 @@ export const SetupScreen = () => {
 
       <div className="w-full bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 dark:border-slate-700 space-y-6">
         
-        <Select 
-          label="What to practice?"
-          id="operation"
-          value={operation}
-          onChange={setOperation}
-          options={[
-            { value: 'add', label: 'Addition (+)' },
-            { value: 'subtract', label: 'Subtraction (-)' },
-            { value: 'multiply', label: 'Multiplication (×)' },
-            { value: 'divide', label: 'Division (÷)' },
-            { value: 'mixed', label: 'Mixed (Random)' }
-          ]}
-        />
+        <div className="tour-operation">
+          <Select 
+            label="What to practice?"
+            id="operation"
+            value={operation}
+            onChange={setOperation}
+            options={[
+              { value: 'add', label: 'Addition (+)' },
+              { value: 'subtract', label: 'Subtraction (-)' },
+              { value: 'multiply', label: 'Multiplication (×)' },
+              { value: 'divide', label: 'Division (÷)' },
+              { value: 'mixed', label: 'Mixed (Random)' }
+            ]}
+          />
+        </div>
 
-        <Select 
-          label="Number size"
+        <div className="tour-number-size">
+          <Select 
+            label="Number size"
           id="numberMode"
           value={numberMode}
           onChange={setNumberMode}
@@ -66,6 +69,7 @@ export const SetupScreen = () => {
             { value: 'custom', label: 'Custom Range' }
           ]}
         />
+        </div>
 
         {numberMode === 'custom' && (
           <div className="flex gap-4">
@@ -87,17 +91,21 @@ export const SetupScreen = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
-        <Button onClick={handleStart} className="px-12 py-4 text-xl">
-          Start Practicing
-        </Button>
-        <Button 
-          onClick={() => setShowPrintModal(true)} 
-          variant="outline" 
-          className="px-8 py-4 text-xl flex items-center justify-center gap-2"
-        >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-          Print Worksheet
-        </Button>
+        <div className="tour-start">
+          <Button onClick={handleStart} className="px-12 py-4 text-xl w-full">
+            Start Practicing
+          </Button>
+        </div>
+        <div className="tour-print">
+          <Button 
+            onClick={() => setShowPrintModal(true)} 
+            variant="outline" 
+            className="px-8 py-4 text-xl flex items-center justify-center gap-2 w-full"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+            Print Worksheet
+          </Button>
+        </div>
       </div>
 
       {showPrintModal && (

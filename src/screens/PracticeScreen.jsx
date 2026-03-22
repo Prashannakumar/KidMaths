@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { generateQuestion } from '../utils/mathUtils';
 import { useSettings } from '../store/SettingsContext';
+import { useProgress } from '../store/ProgressContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { GamingOverlay } from '../components/GamingOverlay';
@@ -10,18 +11,23 @@ export const PracticeScreen = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { settings } = useSettings();
+  const { recordQuestionSolved } = useProgress();
   
   const config = state?.config || { operation: 'add', difficulty: 'easy', numberMode: 'single', customRange: { min: 1, max: 10 } };
   
   const [question, setQuestion] = useState(null);
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState(null); // 'correct' | 'incorrect' | null
+  const [currentAttempts, setCurrentAttempts] = useState(0);
+  const [earnedPointsDisplay, setEarnedPointsDisplay] = useState(null);
   const inputRef = useRef(null);
 
   const loadNewQuestion = () => {
     setQuestion(generateQuestion(config.operation, config.difficulty, config.numberMode, config.customRange));
     setAnswer('');
     setFeedback(null);
+    setCurrentAttempts(0);
+    setEarnedPointsDisplay(null);
   };
 
   useEffect(() => {
@@ -47,7 +53,7 @@ export const PracticeScreen = () => {
       } else {
         url = isCorrect 
           ? 'https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3' // Soft Success
-          : 'https://assets.mixkit.co/active_storage/sfx/2042/2042-preview.mp3'; // Soft error
+          : 'https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3'; // Soft UI pop/thud
       }
       const audio = new Audio(url);
       audio.volume = settings.gamingMode ? 0.6 : 0.3; // slightly louder in gaming mode
@@ -58,12 +64,23 @@ export const PracticeScreen = () => {
   const handleCheck = (submittedAnswer) => {
     if (submittedAnswer === '' || submittedAnswer === null) return;
     
+    const attemptCount = currentAttempts + 1;
+    setCurrentAttempts(attemptCount);
+    
     // Allow checking immediately if MC mode, otherwise parse int
     const numAnswer = parseInt(submittedAnswer, 10);
     
     if (numAnswer === question.correctAnswer) {
       setFeedback('correct');
       playFeedbackSound(true);
+      
+      let pts = 2;
+      if (attemptCount === 1) pts = 10;
+      else if (attemptCount === 2) pts = 5;
+      
+      setEarnedPointsDisplay(pts);
+      recordQuestionSolved(attemptCount, question.questionText, question.correctAnswer);
+      
       setTimeout(() => {
         loadNewQuestion();
       }, settings.animations ? 1200 : 500);
@@ -150,7 +167,10 @@ export const PracticeScreen = () => {
           {feedback === 'correct' && (
             <div className="text-2xl font-bold text-emerald-500 flex items-center gap-2">
               <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
-              Great job!
+              Great job! 
+              <span className="text-amber-500 bg-amber-100 dark:bg-amber-900/40 px-3 py-1 rounded-full text-base ml-2 animate-bounce flex items-center gap-1 shadow-sm">
+                ⭐ +{earnedPointsDisplay}
+              </span>
             </div>
           )}
           {feedback === 'incorrect' && (
