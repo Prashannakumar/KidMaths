@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { SetupScreen } from './screens/SetupScreen';
 import { PracticeScreen } from './screens/PracticeScreen';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/practice" element={<PracticeScreen />} />
         </Routes>
       </main>
+      <Analytics />
     </div>
   );
 }
