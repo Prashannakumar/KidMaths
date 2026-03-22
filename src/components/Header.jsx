@@ -16,7 +16,7 @@ export const Header = () => {
           <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-emerald-400 flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-sm shrink-0">
             +-
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-800 dark:text-white hidden min-[380px]:block">KidMaths</h1>
+          <h1 className="text-base min-[380px]:text-lg sm:text-2xl font-bold tracking-tight text-slate-800 dark:text-white">KidMaths</h1>
         </div>
         
         <div className="flex items-center gap-2 sm:gap-3 md:gap-4 shrink-0">
