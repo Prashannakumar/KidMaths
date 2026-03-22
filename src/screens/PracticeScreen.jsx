@@ -115,10 +115,10 @@ export const PracticeScreen = () => {
         </div>
       </div>
 
-      <div className={`w-full bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 sm:p-12 shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center gap-10 transition-all duration-500 relative z-10 ${settings.visualFeedback && feedback === 'correct' ? 'ring-4 ring-emerald-200 bg-emerald-50 dark:bg-emerald-900/20' : ''} ${settings.visualFeedback && feedback === 'incorrect' ? 'ring-4 ring-red-200 bg-red-50 dark:bg-red-900/20' : ''}`}>
+      <div className={`w-full bg-white dark:bg-slate-800 rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-8 md:p-12 shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center gap-6 sm:gap-10 transition-all duration-500 relative z-10 overflow-hidden ${settings.visualFeedback && feedback === 'correct' ? 'ring-4 ring-emerald-200 bg-emerald-50 dark:bg-emerald-900/20' : ''} ${settings.visualFeedback && feedback === 'incorrect' ? 'ring-4 ring-red-200 bg-red-50 dark:bg-red-900/20' : ''}`}>
         
         {/* Question Display */}
-        <div className="text-6xl sm:text-7xl lg:text-8xl font-black text-slate-800 dark:text-white tracking-tighter" style={{ fontVariantNumeric: 'tabular-nums' }}>
+        <div className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-slate-800 dark:text-white tracking-tighter text-center break-words w-full px-2" style={{ fontVariantNumeric: 'tabular-nums' }}>
           {question.questionText} <span className="text-slate-300 dark:text-slate-600">=</span>
         </div>
 
