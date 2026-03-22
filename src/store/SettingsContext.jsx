@@ -31,11 +31,11 @@ export const SettingsProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('kidmaths_settings', JSON.stringify(settings));
     
-    // Apply dark mode to body
+    // Apply dark mode to document root
     if (settings.darkMode) {
-      document.body.classList.add('dark-mode');
+      document.documentElement.classList.add('dark');
     } else {
-      document.body.classList.remove('dark-mode');
+      document.documentElement.classList.remove('dark');
     }
 
     // Apply font to body

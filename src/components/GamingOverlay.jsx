@@ -5,6 +5,9 @@ const COMPONENTS = [Cat, Ghost, Planet, IceCream, Backpack, Mug];
 const COLORS = ['#FDA7DC', '#83D1FB', '#E0F2FE', '#FDFD96', '#FFB7B2', '#E2F0CB'];
 const MOODS = ['happy', 'blissful', 'excited'];
 
+const SUCCESS_PHRASES = ["Yippee!", "Great Job!", "You're a Math Genius!", "Wow!", "Awesome!"];
+const FAIL_PHRASES = ["Oops!", "Let's try again!", "Almost there!", "Uh oh!"];
+
 const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const randomRange = (min, max) => Math.random() * (max - min) + min;
 
@@ -58,38 +61,23 @@ export const GamingOverlay = ({ feedback, isGamingMode }) => {
       return;
     }
 
-    const reactions = [];
-    
     if (feedback === 'correct') {
-      // Create 3 massive excited popping characters
-      for(let i=0; i<3; i++) {
-        reactions.push({
-          id: `react-correct-${Date.now()}-${i}`,
-          Component: randomItem(COMPONENTS),
-          color: randomItem(COLORS),
-          mood: 'lovestruck',
-          left: `${randomRange(10, 70)}%`,
-          top: `${randomRange(10, 70)}%`,
-          size: Math.floor(randomRange(250, 450)),
-          rotation: `${randomRange(-30, 30)}deg`
-        });
-      }
+      setReaction({
+        Component: randomItem([Cat, Ghost, Planet, IceCream, Backpack]),
+        color: randomItem(COLORS),
+        mood: 'excited',
+        phrase: randomItem(SUCCESS_PHRASES),
+        isCorrect: true
+      });
     } else {
-      // 1 massive shocked or sad character
-      reactions.push({
-        id: `react-incorrect-${Date.now()}`,
-        Component: Cat,
-        color: '#FFB7B2',
-        mood: 'shocked',
-        left: '50%',
-        top: '50%',
-        size: 350,
-        rotation: '0deg',
-        transform: 'translate(-50%, -50%)'
+      setReaction({
+        Component: randomItem([Cat, Ghost, Planet, IceCream, Backpack]),
+        color: randomItem(COLORS),
+        mood: 'sad',
+        phrase: randomItem(FAIL_PHRASES),
+        isCorrect: false
       });
     }
-    
-    setReaction(reactions);
 
     const timer = setTimeout(() => {
       setReaction(null);
@@ -101,49 +89,52 @@ export const GamingOverlay = ({ feedback, isGamingMode }) => {
   if (!isGamingMode) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* Background Elements */}
-      {backgroundElements.map((el) => {
-        const { Component } = el;
-        return (
-          <div 
-            key={el.id}
-            className={`absolute ${el.animationClass}`}
-            style={{
-              top: el.top,
-              animationDelay: el.animationDelay,
-              animationDuration: el.animationDuration,
-              filter: 'drop-shadow(0 15px 25px rgba(0,0,0,0.15))',
-              zIndex: 1, // behind the main panel
-            }}
-          >
-            <div className="animate-float">
-               <Component size={el.size} mood={el.mood} color={el.color} />
+    <>
+      {/* Background Elements (Behind everything) */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {backgroundElements.map((el) => {
+          const { Component } = el;
+          return (
+            <div 
+              key={el.id}
+              className={`absolute ${el.animationClass}`}
+              style={{
+                top: el.top,
+                animationDelay: el.animationDelay,
+                animationDuration: el.animationDuration,
+                filter: 'drop-shadow(0 15px 25px rgba(0,0,0,0.15))',
+              }}
+            >
+              <div className="animate-float">
+                 <Component size={el.size} mood={el.mood} color={el.color} />
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
 
-      {/* Foreground Reaction Elements */}
-      {reaction && reaction.map((el) => {
-        const { Component } = el;
-        return (
-          <div 
-            key={el.id}
-            className={`absolute z-50 text-center flex items-center justify-center`}
-            style={{
-              top: el.top,
-              left: el.left,
-              transform: el.transform || `rotate(${el.rotation})`,
-              filter: 'drop-shadow(0 25px 35px rgba(0,0,0,0.25))',
-            }}
-          >
-            <div className={`animate-pop-in-out ${feedback==='incorrect'?'animate-wiggle':''}`}>
-              <Component size={el.size} mood={el.mood} color={el.color} />
-            </div>
+      {/* Foreground Character Reaction Element (Above everything) */}
+      {reaction && (
+        <div className="fixed inset-0 flex items-center justify-center z-[100] pointer-events-none fade-in">
+          <div className="relative flex flex-col items-center gap-4 sm:gap-6 mt-10 sm:mt-20 px-4">
+             {/* Speech Bubble */}
+             <div className={`relative px-6 sm:px-8 py-4 sm:py-5 rounded-3xl text-xl sm:text-3xl font-bold shadow-2xl animate-pop-in-out text-center ${reaction.isCorrect ? 'bg-white text-emerald-600 border-4 border-emerald-200' : 'bg-white text-rose-500 border-4 border-rose-200'} `}>
+               {reaction.phrase}
+               {/* Speech Bubble Tail pointing down */}
+               <div className={`absolute -bottom-3 sm:-bottom-4 left-1/2 -translate-x-1/2 w-6 sm:w-8 h-6 sm:h-8 rotate-45 ${reaction.isCorrect ? 'bg-white border-b-4 border-r-4 border-emerald-200' : 'bg-white border-b-4 border-r-4 border-rose-200'}`}></div>
+             </div>
+             
+             {/* Character */}
+             <div className={`animate-pop-in-out ${reaction.isCorrect ? 'animate-bounce' : 'animate-wiggle'}`} style={{ filter: 'drop-shadow(0 25px 35px rgba(0,0,0,0.25))' }}>
+               <reaction.Component 
+                  size={typeof window !== 'undefined' && window.innerWidth < 640 ? 160 : 250} 
+                  mood={reaction.mood} 
+                  color={reaction.color} 
+               />
+             </div>
           </div>
-        );
-      })}
-    </div>
+        </div>
+      )}
+    </>
   );
 };

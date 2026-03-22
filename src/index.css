@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-nunito: "Nunito", sans-serif;
   --font-quicksand: "Quicksand", sans-serif;
@@ -18,11 +20,7 @@
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-800 transition-colors duration-300;
-  }
-  
-  body.dark-mode {
-    @apply bg-dark-bg text-slate-200;
+    @apply bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300 h-full w-full;
   }
 }
 
